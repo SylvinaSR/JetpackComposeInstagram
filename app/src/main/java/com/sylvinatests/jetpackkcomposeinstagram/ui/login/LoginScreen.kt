@@ -1,6 +1,7 @@
 package com.sylvinatests.jetpackkcomposeinstagram.ui.login
 
 import android.app.Activity
+import android.util.Patterns
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,6 +20,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -92,9 +94,15 @@ fun BodyScreen(modifier: Modifier) {
     Column(modifier = modifier) {
         ImageLogo(Modifier.align(Alignment.CenterHorizontally))
         Spacer(modifier = Modifier.size(16.dp))
-        Email(email) { email = it }
+        Email(email) {
+            email = it
+            isLoginEnabled = enableLogin(email = email, password = password)
+        }
         Spacer(modifier = Modifier.size(4.dp))
-        Password(password) { password = it }
+        Password(password) {
+            password = it
+            isLoginEnabled = enableLogin(email = email, password = password)
+        }
         Spacer(modifier = Modifier.size(8.dp))
         ForgotPassword(Modifier.align(Alignment.End))
         Spacer(modifier = Modifier.size(16.dp))
@@ -160,9 +168,13 @@ fun Password(password: String, onTextChanged: (String) -> Unit) {
             unfocusedIndicatorColor = Color.Transparent
         ),
         trailingIcon = {
-            val image = if (passwordVisible) R.drawable.ic_hide_password else R.drawable.ic_show_password
+            val image =
+                if (passwordVisible) R.drawable.ic_hide_password else R.drawable.ic_show_password
             IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                Icon(painter = painterResource(id = image), contentDescription = "Password Visibility")
+                Icon(
+                    painter = painterResource(id = image),
+                    contentDescription = "Password Visibility"
+                )
             }
         },
         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation()
@@ -182,10 +194,24 @@ fun ForgotPassword(modifier: Modifier) {
 
 @Composable
 fun ButtonLogin(isLoginEnable: Boolean) {
-    Button(modifier = Modifier.fillMaxWidth(), onClick = {}, enabled = isLoginEnable) {
+    Button(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = {},
+        enabled = isLoginEnable,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(0xFF4EABE9),
+            disabledContainerColor = Color(0xFF78C8F9),
+            contentColor = Color.White,
+            disabledContentColor = Color.White
+        )
+    ) {
         Text(text = "Log in")
     }
 }
+
+fun enableLogin(email: String, password: String): Boolean =
+    Patterns.EMAIL_ADDRESS.matcher(email).matches() && password.length >= 6
+
 
 @Composable
 fun LoginDivider() {
