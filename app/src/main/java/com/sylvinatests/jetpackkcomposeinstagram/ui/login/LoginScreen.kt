@@ -15,13 +15,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,6 +36,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -114,15 +120,53 @@ fun Email(email: String, onTextChanged: (String) -> Unit) {
     TextField(
         modifier = Modifier.fillMaxWidth(),
         value = email,
-        onValueChange = { onTextChanged(it) })
+        onValueChange = { onTextChanged(it) },
+        placeholder = { Text(text = "Email") },
+        maxLines = 1,
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+        colors = TextFieldDefaults.colors(
+            unfocusedTextColor = Color(0xFFB2B2B2),
+            focusedTextColor = Color(0xFFB2B2B2),
+            unfocusedContainerColor = Color(0xFFFAFAFA),
+            focusedContainerColor = Color(0xFFFAFAFA),
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        )
+    )
 }
 
 @Composable
 fun Password(password: String, onTextChanged: (String) -> Unit) {
+
+    var passwordVisible by rememberSaveable {
+        mutableStateOf(false)
+    }
+
     TextField(
         modifier = Modifier.fillMaxWidth(),
         value = password,
-        onValueChange = { onTextChanged(it) })
+        onValueChange = { onTextChanged(it) },
+        placeholder = { Text(text = "Password") },
+        maxLines = 1,
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        colors = TextFieldDefaults.colors(
+            unfocusedTextColor = Color(0xFFB2B2B2),
+            focusedTextColor = Color(0xFFB2B2B2),
+            unfocusedContainerColor = Color(0xFFFAFAFA),
+            focusedContainerColor = Color(0xFFFAFAFA),
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        ),
+        trailingIcon = {
+            val image = if (passwordVisible) R.drawable.ic_hide_password else R.drawable.ic_show_password
+            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                Icon(painter = painterResource(id = image), contentDescription = "Password Visibility")
+            }
+        },
+        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation()
+    )
 }
 
 @Composable
