@@ -8,7 +8,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +28,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -41,27 +41,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sylvinatests.jetpackkcomposeinstagram.R
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable()
-fun PreviewScreen() {
-    LoginScreen(PaddingValues(0.dp))
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable()
+//fun PreviewScreen() {
+//    LoginScreen(PaddingValues(0.dp))
+//}
 
 @Composable
-fun LoginScreen(paddingValues: PaddingValues) {
+fun LoginScreen(modifier: Modifier, loginViewModel: LoginViewModel) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
-            .padding(paddingValues)
             .padding(8.dp)
     ) {
         MyHeader(Modifier.align(Alignment.TopEnd))
-        BodyScreen(Modifier.align(Alignment.Center))
+        BodyScreen(Modifier.align(Alignment.Center), loginViewModel)
         FooterScreen(Modifier.align(Alignment.BottomCenter))
     }
 }
@@ -77,11 +75,9 @@ fun MyHeader(modifier: Modifier) {
 }
 
 @Composable
-fun BodyScreen(modifier: Modifier) {
+fun BodyScreen(modifier: Modifier, loginViewModel: LoginViewModel) {
 
-    var email by rememberSaveable {
-        mutableStateOf("")
-    }
+    val email: String by loginViewModel.email.observeAsState(initial = "")
 
     var password by rememberSaveable {
         mutableStateOf("")
@@ -95,8 +91,7 @@ fun BodyScreen(modifier: Modifier) {
         ImageLogo(Modifier.align(Alignment.CenterHorizontally))
         Spacer(modifier = Modifier.size(16.dp))
         Email(email) {
-            email = it
-            isLoginEnabled = enableLogin(email = email, password = password)
+            loginViewModel.onLoginChanged(it)
         }
         Spacer(modifier = Modifier.size(4.dp))
         Password(password) {
