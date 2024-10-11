@@ -79,24 +79,19 @@ fun BodyScreen(modifier: Modifier, loginViewModel: LoginViewModel) {
 
     val email: String by loginViewModel.email.observeAsState(initial = "")
 
-    var password by rememberSaveable {
-        mutableStateOf("")
-    }
+    val password: String by loginViewModel.password.observeAsState(initial = "")
 
-    var isLoginEnabled by rememberSaveable {
-        mutableStateOf(false)
-    }
+    val isLoginEnabled by loginViewModel.isLoginEnabled.observeAsState(initial = false)
 
     Column(modifier = modifier) {
         ImageLogo(Modifier.align(Alignment.CenterHorizontally))
         Spacer(modifier = Modifier.size(16.dp))
         Email(email) {
-            loginViewModel.onLoginChanged(it)
+            loginViewModel.onLoginChanged(email = it, password = password)
         }
         Spacer(modifier = Modifier.size(4.dp))
         Password(password) {
-            password = it
-            isLoginEnabled = enableLogin(email = email, password = password)
+            loginViewModel.onLoginChanged(email = email, password = it)
         }
         Spacer(modifier = Modifier.size(8.dp))
         ForgotPassword(Modifier.align(Alignment.End))
@@ -203,10 +198,6 @@ fun ButtonLogin(isLoginEnable: Boolean) {
         Text(text = "Log in")
     }
 }
-
-fun enableLogin(email: String, password: String): Boolean =
-    Patterns.EMAIL_ADDRESS.matcher(email).matches() && password.length >= 6
-
 
 @Composable
 fun LoginDivider() {
