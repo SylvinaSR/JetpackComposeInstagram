@@ -64,4 +64,8 @@ dependencies {
     debugImplementation libs.androidx.ui.tooling
     debugImplementation libs.androidx.ui.test.manifest
     implementation libs.androidx.runtime.livedata
+
+    //Retrofit
+    implementation libs.retrofit
+    implementation libs.converter.gson
 }
