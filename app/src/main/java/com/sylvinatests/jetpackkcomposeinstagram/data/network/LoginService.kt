@@ -1,17 +1,17 @@
 package com.sylvinatests.jetpackkcomposeinstagram.data.network
 
-import com.sylvinatests.jetpackkcomposeinstagram.core.network.RetrofitHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.Retrofit
+import javax.inject.Inject
 
-class LoginService {
-
-    private val retrofit = RetrofitHelper.getRetrofit()
+class LoginService @Inject constructor(
+    private val apiService: ApiService
+) {
 
     suspend fun doLogin(user: String, password: String): Boolean {
         return withContext(Dispatchers.IO) {
-            val response =
-                retrofit.create(ApiService::class.java).doLogin()
+            val response = apiService.doLogin()
             response.body()?.success ?: false
         }
     }

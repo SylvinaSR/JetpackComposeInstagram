@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -17,8 +18,13 @@ import com.sylvinatests.jetpackkcomposeinstagram.ui.login.LoginViewModel
 import com.sylvinatests.jetpackkcomposeinstagram.ui.theme.JetpackkComposeInstagramTheme
 import com.sylvinatests.jetpackkcomposeinstagram.ui.tweet.BodyTweet
 import com.sylvinatests.jetpackkcomposeinstagram.ui.tweet.MyScreenTweet
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val loginViewModel: LoginViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -28,7 +34,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     containerColor = Color.White
                 ) { innerPadding ->
-                    LoginScreen(Modifier.padding(innerPadding), LoginViewModel())
+                    LoginScreen(Modifier.padding(innerPadding), loginViewModel)
                 }
             }
         }
